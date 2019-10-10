@@ -4,28 +4,55 @@ import { Link } from 'react-router-dom'
 
 import Item from './Item'
 import SearchForm from './SearchForm'
+import RestaurantList from './RestaurantList'
 
 export default class Home extends React.Component {
   constructor() {
     super()
     this.state = {
-      locationSuggestions: null,
       searchCities: '',
+      citySuggestions: null,
       selectedCity: '',
-      searchTerm: '',
       cuisineSuggestions: null,
       selectedCuisine: '',
-      restaurantSuggestions: '',
+      searchTerm: '',
+      restaurantSuggestions: null,
       selectedRestauarant: ''
     }
 
     this.header = { headers: { 'user-key': process.env.ZOMATO_TOKEN } }
 
     this.onChange = this.onChange.bind(this)
-    this.onClick = this.onClick.bind(this)
-    this.onSubmitSearch = this.onSubmitSearch.bind(this)
+    this.selectCity = this.selectCity.bind(this)
+    this.submitSearch = this.submitSearch.bind(this)
     this.selectCuisine = this.selectCuisine.bind(this)
-    this.onSubmitCities = this.onSubmitCities.bind(this)
+    this.submitCities = this.submitCities.bind(this)
+  }
+
+  onChange({ target: { name, value } }) {
+    console.log(name)
+
+    this.setState({ [name]: value })
+  }
+
+  submitCities(e) {
+    e.preventDefault()
+    axios.get(`https://developers.zomato.com/api/v2.1/cities?q=${this.state.searchCities}`, this.header)
+      .then(res => this.setState({ citySuggestions: res.data.location_suggestions }))
+      .catch(err => console.log(err))
+  }
+
+  submitSearch(e) {
+    e.preventDefault()
+    const url = `https://developers.zomato.com/api/v2.1/search?entity_id=${this.state.selectedCity}&entity_type=city&q=${this.state.searchTerm}&cuisines=${this.state.selectedCuisine}`
+    axios.get(url, this.header)
+      .then(res => this.setState({ restaurantSuggestions: res.data.restaurants }))
+      .catch(err => console.log(err))
+  }
+
+  selectCity(id) {
+    this.setState({ selectedCity: id })
+    this.getCuisine(id)
   }
 
   getCuisine(id) {
@@ -38,33 +65,8 @@ export default class Home extends React.Component {
     this.setState({ selectedCuisine: id })
   }
 
-  onClick(id) {
-    this.setState({ selectedCity: id })
-    this.getCuisine(id)
-  }
-
-  onChange({ target: { name, value } }) {
-    console.log(name)
-
-    this.setState({ [name]: value })
-  }
-
-  onSubmitCities(e) {
-    e.preventDefault()
-    axios.get(`https://developers.zomato.com/api/v2.1/cities?q=${this.state.searchCities}`, this.header)
-      .then(res => this.setState({ locationSuggestions: res.data.location_suggestions }))
-      .catch(err => console.log(err))
-  }
-
-  onSubmitSearch(e) {
-    e.preventDefault()
-    const url = `https://developers.zomato.com/api/v2.1/search?entity_id=${this.state.selectedCity}&entity_type=city&q=${this.state.searchTerm}&cuisines=${this.state.selectedCuisine}`
-    axios.get(url, this.header)
-      .then(res => this.setState({ restaurantSuggestions: res.data.restaurants }))
-      .catch(err => console.log(err))
-  }
-
   render() {
+    const { citySuggestions, cuisineSuggestions, restaurantSuggestions } = this.state
     return (
       <>
         <header>
@@ -72,59 +74,35 @@ export default class Home extends React.Component {
             <div className='logo'>Nomato</div>
           </Link>
           <div className='search-bar'>
-            <SearchForm name='searchCities' onChange={this.onChange} onSubmit={this.onSubmitCities} />
-            <SearchForm name='searchTerm' onChange={this.onChange} onSubmit={this.onSubmitSearch} />
+            <SearchForm name='searchCities' onChange={this.onChange} onSubmit={this.submitCities} />
+            <SearchForm name='searchTerm' onChange={this.onChange} onSubmit={this.submitSearch} />
           </div>
         </header>
 
-        {this.state.locationSuggestions &&
+        {citySuggestions &&
           <div className='flex-wrapper'>
-            {this.state.locationSuggestions.map(loc => (
-              <Item className='item' key={loc.id} id={loc.id} name={loc.name} onClick={this.onClick} />
+            {citySuggestions.map(loc => (
+              <Item className='item' key={loc.id} { ...loc } onClick={this.selectCity} />
             ))}
           </div>
         }
 
-        {this.state.cuisineSuggestions &&
+        {cuisineSuggestions &&
           <div className='flex-wrapper'>
-            {this.state.cuisineSuggestions.map(({ cuisine: { cuisine_id, cuisine_name } }) => (
+            {cuisineSuggestions.map(({ cuisine: { cuisine_id, cuisine_name } }) => (
               <Item className='item' key={cuisine_id} id={cuisine_id} name={cuisine_name} onClick={this.selectCuisine} />
             ))}
           </div>
         }
-        {this.state.restaurantSuggestions &&
-          <ul className='restaurant-wrapper'>
-          {this.state.restaurantSuggestions.map(({ restaurant: { name, id, location, thumb, establishment, cuisines, average_cost_for_two, currency, timings, user_rating } }) => (
-              <Link to={`restaurants/${id}`} key={id}>
-                <li className='restaurant'>
-                  <img src={thumb} />
-                  <div>
-                    <h4>{name}</h4>
-                    <p>{location.locality}</p>
-                    <p className='type'>{establishment}</p>
-                    <div className='rating-wrapper'>
-                      <div className='rating' style={{ backgroundColor: `#${user_rating.rating_color}` }}>{user_rating.aggregate_rating}</div>
-                      <span>{user_rating.votes} votes</span>
-                    </div>
-                  </div>
-                  <div className='details'>
-                    <div>
-                      <p>Cuisines:</p>
-                      <p>{cuisines}</p>
-                    </div>
-                    <div>
-                      <p>Cost for Two:</p>
-                      <p>{currency}{average_cost_for_two}</p>
-                    </div>
-                    <div>
-                      <p>Hours:</p>
-                      <p>{timings}</p>
-                    </div>
-                  </div>
-                </li>
-              </Link>
-            ))}
-          </ul>
+
+        {restaurantSuggestions &&
+          <section>
+            <ul className='restaurant-wrapper'>
+              {restaurantSuggestions.map(({ restaurant }) => (
+                <RestaurantList key={restaurant.id} { ...restaurant }/>
+              ))}
+            </ul>
+          </section>
         }
       </>
     )
