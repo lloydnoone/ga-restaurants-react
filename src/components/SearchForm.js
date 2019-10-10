@@ -1,8 +1,7 @@
 import React from 'react'
 
-const SearchForm = ({ name, label, onChange, onSubmit }) => (
+const SearchForm = ({ name, onChange, onSubmit }) => (
   <form onChange={onChange} onSubmit={onSubmit}>
-    <label>{label}</label>
     <input name={name} placeholder={name} />
     <button type='submit'>Search</button>
   </form>

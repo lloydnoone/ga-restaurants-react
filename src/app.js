@@ -11,7 +11,7 @@ const App = () => (
   <BrowserRouter>
     <Switch>
       <Route exact path='/' component={Home} />
-      <Route path='restaurants/:id' component={Restaurant}/>
+      <Route path='/restaurants/:id' component={Restaurant}/>
     </Switch>
   </BrowserRouter>
 )

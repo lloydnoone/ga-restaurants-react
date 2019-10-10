@@ -26,7 +26,6 @@ export default class Home extends React.Component {
     this.onSubmitSearch = this.onSubmitSearch.bind(this)
     this.selectCuisine = this.selectCuisine.bind(this)
     this.onSubmitCities = this.onSubmitCities.bind(this)
-    this.restClick = this.restClick.bind(this)
   }
 
   getCuisine(id) {
@@ -42,11 +41,6 @@ export default class Home extends React.Component {
   onClick(id) {
     this.setState({ selectedCity: id })
     this.getCuisine(id)
-  }
-
-  restClick(location) {
-    console.log(location.address)
-    console.log('test rest')
   }
 
   onChange({ target: { name, value } }) {
@@ -73,10 +67,15 @@ export default class Home extends React.Component {
   render() {
     return (
       <>
-        <div className='search-bar'>
-          <SearchForm name='searchCities' label='City' onChange={this.onChange} onSubmit={this.onSubmitCities} />
-          <SearchForm name='searchTerm' label='Search' onChange={this.onChange} onSubmit={this.onSubmitSearch} />
-        </div>
+        <header>
+          <Link to='/'>
+            <div className='logo'>Nomato</div>
+          </Link>
+          <div className='search-bar'>
+            <SearchForm name='searchCities' onChange={this.onChange} onSubmit={this.onSubmitCities} />
+            <SearchForm name='searchTerm' onChange={this.onChange} onSubmit={this.onSubmitSearch} />
+          </div>
+        </header>
 
         {this.state.locationSuggestions &&
           <div className='flex-wrapper'>
@@ -94,19 +93,23 @@ export default class Home extends React.Component {
           </div>
         }
         {this.state.restaurantSuggestions &&
-          <ul>
-            {this.state.restaurantSuggestions.map(({ restaurant: { name, id, location, thumb, cuisines, average_cost_for_two, currency, timings } }) => (
-              <Link to={`/restaurant/${id}`} key={id}>
-                <li className='restaurant' onClick={() => this.restClick(location)}>
+          <ul className='restaurant-wrapper'>
+          {this.state.restaurantSuggestions.map(({ restaurant: { name, id, location, thumb, cuisines, average_cost_for_two, currency, timings, user_rating } }) => (
+              <Link to={`restaurants/${id}`} key={id}>
+                <li className='restaurant'>
                   <img src={thumb} />
                   <div>
                     <h4>{name}</h4>
                     <p>{location.locality}</p>
+                  <div className='rating-wrapper'>
+                    <div className='rating' style={{ backgroundColor: `#${user_rating.rating_color}` }}>{user_rating.aggregate_rating}</div>
+                    <span>{user_rating.votes} votes</span>
+                  </div>
                   </div>
                   <div>
-                    <p>{cuisines}</p>
-                    <p>{currency}{average_cost_for_two}</p>
-                    <p>{timings}</p>
+                    <p><span className='details'>Cuisines:</span><span>{cuisines}</span></p>
+                    <p><span className='details'>Cost for Two:</span>{currency}{average_cost_for_two}</p>
+                    <p><span className='details'>Hours:</span>{timings}</p>
                   </div>
                 </li>
               </Link>
