@@ -122,6 +122,15 @@ header {
     margin-right: 10px;
   }
 
+  > div:first-of-type {
+    position: relative;
+    min-width: 350px;
+  }
+
+  &:hover h4 {
+    color: $zomato-darkRed;
+  }
+
   h4 {
     margin: 12px 0;
     color: $zomato-red;
@@ -132,7 +141,22 @@ header {
     color: $zomato-black;
   }
 
+  img {
+    height: 125px;
+    width: 125px;
+    min-width: 125px;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
+  .type {
+    font-size: 11px;
+    color: $zomato-lightGrey;
+  }
+
   .rating-wrapper {
+    display: flex;
+    align-items: center;
     position: absolute;
     bottom: 0;
 
@@ -147,8 +171,6 @@ header {
     }
 
     span {
-      // display: flex;
-      // align-content: center;
       margin-left: 10px;
       font-size: 10px;
       color: $zomato-lightGrey;
@@ -156,21 +178,17 @@ header {
   }
 
   .details {
-    display: inline-block;
-    min-width: 100px;
-    color: $zomato-lightGrey;
-  }
+    > div {
+      display: flex;
+    }
 
-  > div:first-of-type {
-    position: relative;
-    min-width: 300px;
-  }
+    p {
+      margin-bottom: 0;
+    }
 
-  img {
-    height: 125px;
-    width: 125px;
-    min-width: 125px;
-    border-radius: 5px;
-    background-color: rgba(0, 0, 0, 0.2);
+    p:first-of-type {
+      min-width: 100px;
+      color: $zomato-lightGrey;
+    }
   }
 }

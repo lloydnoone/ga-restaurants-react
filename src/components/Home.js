@@ -94,22 +94,32 @@ export default class Home extends React.Component {
         }
         {this.state.restaurantSuggestions &&
           <ul className='restaurant-wrapper'>
-          {this.state.restaurantSuggestions.map(({ restaurant: { name, id, location, thumb, cuisines, average_cost_for_two, currency, timings, user_rating } }) => (
+          {this.state.restaurantSuggestions.map(({ restaurant: { name, id, location, thumb, establishment, cuisines, average_cost_for_two, currency, timings, user_rating } }) => (
               <Link to={`restaurants/${id}`} key={id}>
                 <li className='restaurant'>
                   <img src={thumb} />
                   <div>
                     <h4>{name}</h4>
                     <p>{location.locality}</p>
-                  <div className='rating-wrapper'>
-                    <div className='rating' style={{ backgroundColor: `#${user_rating.rating_color}` }}>{user_rating.aggregate_rating}</div>
-                    <span>{user_rating.votes} votes</span>
+                    <p className='type'>{establishment}</p>
+                    <div className='rating-wrapper'>
+                      <div className='rating' style={{ backgroundColor: `#${user_rating.rating_color}` }}>{user_rating.aggregate_rating}</div>
+                      <span>{user_rating.votes} votes</span>
+                    </div>
                   </div>
-                  </div>
-                  <div>
-                    <p><span className='details'>Cuisines:</span><span>{cuisines}</span></p>
-                    <p><span className='details'>Cost for Two:</span>{currency}{average_cost_for_two}</p>
-                    <p><span className='details'>Hours:</span>{timings}</p>
+                  <div className='details'>
+                    <div>
+                      <p>Cuisines:</p>
+                      <p>{cuisines}</p>
+                    </div>
+                    <div>
+                      <p>Cost for Two:</p>
+                      <p>{currency}{average_cost_for_two}</p>
+                    </div>
+                    <div>
+                      <p>Hours:</p>
+                      <p>{timings}</p>
+                    </div>
                   </div>
                 </li>
               </Link>
