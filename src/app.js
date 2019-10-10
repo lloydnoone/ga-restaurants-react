@@ -1,8 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import axios from 'axios'
+import { BrowserRouter, Switch, Route, Link } from 'react-router-dom'
 
 import './style.scss'
+
+import Item from './components/Item'
+import SearchForm from './components/SearchForm'
 
 class App extends React.Component {
   constructor() {
@@ -13,28 +17,25 @@ class App extends React.Component {
       selectedCity: '',
       searchTerm: '',
       cuisineSuggestions: null,
-      selectedCuisine: ''
+      selectedCuisine: '',
+      restaurantSuggestions: '',
+      selectedRestauarant: ''
     }
 
     this.header = { headers: { 'user-key': process.env.ZOMATO_TOKEN } }
 
     this.onChange = this.onChange.bind(this)
-    this.onSubmit = this.onSubmit.bind(this)
+    this.onClick = this.onClick.bind(this)
+    this.onSubmitSearch = this.onSubmitSearch.bind(this)
     this.selectCuisine = this.selectCuisine.bind(this)
-    this.onSearchCities = this.onSearchCities.bind(this)
     this.onSubmitCities = this.onSubmitCities.bind(this)
+    this.restClick = this.restClick.bind(this)
   }
-
-  // componentDidMount() {
-  //   axios.get('https://developers.zomato.com/api/v2.1/cities?q=london', this.header)
-  //     .then(res => this.setState({ locationSuggestions: res.data.location_suggestions }))
-  //     .catch(err => console.log(err))
-  // }
 
   getCuisine(id) {
     axios.get(`https://developers.zomato.com/api/v2.1/cuisines?city_id=${id}`, this.header)
       .then(res => this.setState({ cuisineSuggestions: res.data.cuisines }))
-      .catch(err =>console.log(err))
+      .catch(err => console.log(err))
   }
 
   selectCuisine(id) {
@@ -46,12 +47,15 @@ class App extends React.Component {
     this.getCuisine(id)
   }
 
-  onChange(e) {
-    this.setState({ searchTerm: e.target.value })
+  restClick(location) {
+    console.log(location.address)
+    console.log('test rest')
   }
 
-  onSearchCities(e) {
-    this.setState({ searchCities: e.target.value })
+  onChange({ target: { name, value } }) {
+    console.log(name)
+
+    this.setState({ [name]: value })
   }
 
   onSubmitCities(e) {
@@ -61,44 +65,55 @@ class App extends React.Component {
       .catch(err => console.log(err))
   }
 
-  onSubmit(e) {
+  onSubmitSearch(e) {
     e.preventDefault()
     const url = `https://developers.zomato.com/api/v2.1/search?entity_id=${this.state.selectedCity}&entity_type=city&q=${this.state.searchTerm}&cuisines=${this.state.selectedCuisine}`
-    console.log(url)    
     axios.get(url, this.header)
-      .then(res => console.log(res.data))
+      .then(res => this.setState({ restaurantSuggestions: res.data.restaurants }))
       .catch(err => console.log(err))
   }
-  
+
   render() {
-    console.log(this.state)
     return (
       <>
-        <form onChange={this.onSearchCities} onSubmit={this.onSubmitCities}>
-          <label>City</label>
-          <input placeholder='search cities'></input>
-          <button type='submit'>Search</button>
-        </form>
+        <div className='search-bar'>
+          <SearchForm name='searchCities' label='City' onChange={this.onChange} onSubmit={this.onSubmitCities} />
+          <SearchForm name='searchTerm' label='Search' onChange={this.onChange} onSubmit={this.onSubmitSearch} />
+        </div>
 
         {this.state.locationSuggestions &&
-          <ul>
+          <div className='flex-wrapper'>
             {this.state.locationSuggestions.map(loc => (
-              <li key={loc.id} onClick={() => this.onClick(loc.id)}>{loc.name}</li>
+              <Item className='item' key={loc.id} id={loc.id} name={loc.name} onClick={this.onClick} />
             ))}
-          </ul>
+          </div>
         }
 
-        <form onChange={this.onChange} onSubmit={this.onSubmit}>
-          <label>Search</label>
-          <input placeholder='search'/>
-          <button type='submit'>Search</button>
-        </form>
-
         {this.state.cuisineSuggestions &&
+          <div className='flex-wrapper'>
+            {this.state.cuisineSuggestions.map(({ cuisine: { cuisine_id, cuisine_name } }) => (
+              <Item className='item' key={cuisine_id} id={cuisine_id} name={cuisine_name} onClick={this.selectCuisine} />
+            ))}
+          </div>
+        }
+        {this.state.restaurantSuggestions &&
           <ul>
-            {this.state.cuisineSuggestions.map((cuisine, i) => {
-              return <li key={cuisine.cuisine.cuisine_id} onClick={() => this.selectCuisine(cuisine.cuisine.cuisine_id)}>{cuisine.cuisine.cuisine_name}</li>
-            })}
+            {this.state.restaurantSuggestions.map(({ restaurant: { name, id, location, thumb, cuisines, average_cost_for_two, currency, timings } }) => (
+              <Link to='/restaurant/:id'>
+                <li className='restaurant' key={id} onClick={() => this.restClick(location)}>
+                  <img src={thumb} />
+                  <div>
+                    <h4>{name}</h4>
+                    <p>{location.locality}</p>
+                  </div>
+                  <div>
+                    <p>{cuisines}</p>
+                    <p>{currency}{average_cost_for_two}</p>
+                    <p>{timings}</p>
+                  </div>
+                </li>
+              </Link>
+            ))}
           </ul>
         }
       </>
