@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-console.log('restaurant running')
+import { Link } from 'react-router-dom'
 
 export default class Restaurant extends React.Component {
   constructor() {
@@ -14,7 +14,6 @@ export default class Restaurant extends React.Component {
   }
 
   componentDidMount() {
-    console.log('rest page mounted.')
     const url = `https://developers.zomato.com/api/v2.1/restaurant?res_id=${this.props.match.params.id}`
     axios.get(url, this.headers)
       .then(res => this.setState({ restData: res.data }))
@@ -39,6 +38,7 @@ export default class Restaurant extends React.Component {
     return (
       this.state.restData &&
       <main className='restaurant-show'>
+        <Link to='/' className='logo'>Nomato</Link>
         <img src={featured_image} />
         <div className='panel-wrapper restDetails'>
           <div className='restMainInfo'>

@@ -213,9 +213,18 @@ main {
   margin: 0 auto;
   max-width: 1200px;
 
+  .logo {
+    position: absolute;
+    margin: 8px;
+    width: 75px;
+    height: 75px;
+    font-size: 16px;
+  }
+
   img {
     max-width: 100%;
     margin-bottom: 10px;
+    border-radius: 5px;
   }
 
   h4 {
