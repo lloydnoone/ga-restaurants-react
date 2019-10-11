@@ -22,21 +22,22 @@ export default class Restaurant extends React.Component {
 
   render() {
     if (!this.state.restData) return null
-    const { thumb, name,
+    const { thumb, name, featured_image,
       location: { locality, address }, establishment,
-      user_rating: { aggregate_rating, rating_text },
-      all_reviews_count, phone_numbers, cuisines, average_cost_for_two, currency, url, timings
+      user_rating: { aggregate_rating, rating_text, rating_color },
+      all_reviews_count, phone_numbers, cuisines, average_cost_for_two, currency, url, timings, highlights
     } = this.state.restData
     return (
       this.state.restData &&
       <>
         <div>
-          <img src={thumb} />
+          <img src={ featured_image } />
           <h1>{name}</h1>
           <h2>{locality} {establishment[0]}</h2>
           <aside>
             {aggregate_rating}
             {rating_text}
+            {rating_color}
             based on {all_reviews_count} votes
           </aside>
         </div>
@@ -50,15 +51,14 @@ export default class Restaurant extends React.Component {
           <h4>Address {address}</h4>
           <h4>Address {address}</h4>
           <h4>More info</h4>
+          <h4>highlights</h4>
           <ul>
-            <li> No takeaway</li>
-            <li> Full bar available</li>
-            <li> Indoor Seating</li>
-            <li> Pre-theatre menu</li>
-            <li> Luxury Dining</li>
-            <li> Wifi</li>
-            <li> Group Meal</li>
+            {highlights.map(hl => ( <li>hl</li> ))}
           </ul>
+        </div>
+        <div>
+          <h4>Menu</h4>
+          <img />
         </div>
       </>
     )

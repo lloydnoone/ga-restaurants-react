@@ -14,7 +14,7 @@ export default class Home extends React.Component {
       citySuggestions: null,
       selectedCity: '',
       cuisineSuggestions: null,
-      selectedCuisine: '',
+      selectedCuisines: [],
       searchTerm: '',
       restaurantSuggestions: null,
       selectedRestauarant: ''
@@ -30,8 +30,6 @@ export default class Home extends React.Component {
   }
 
   onChange({ target: { name, value } }) {
-    console.log(name)
-
     this.setState({ [name]: value })
   }
 
@@ -44,7 +42,10 @@ export default class Home extends React.Component {
 
   submitSearch(e) {
     e.preventDefault()
-    const url = `https://developers.zomato.com/api/v2.1/search?entity_id=${this.state.selectedCity}&entity_type=city&q=${this.state.searchTerm}&cuisines=${this.state.selectedCuisine}`
+    const city = `entity_id=${this.state.selectedCity}&entity_type=city`
+    const cuisines = `cuisines=${this.state.selectedCuisines.join(',')}`
+    const url = `https://developers.zomato.com/api/v2.1/search?${city}&q=${this.state.searchTerm}&${cuisines}`
+    console.log(url)
     axios.get(url, this.header)
       .then(res => this.setState({ restaurantSuggestions: res.data.restaurants }))
       .catch(err => console.log(err))
@@ -62,48 +63,52 @@ export default class Home extends React.Component {
   }
 
   selectCuisine(id) {
-    this.setState({ selectedCuisine: id })
+    let selectedCuisines
+    if (this.state.selectedCuisines.includes(id)) {
+      selectedCuisines = this.state.selectedCuisines.filter(cui => cui !== id)
+    } else {
+      selectedCuisines = [...this.state.selectedCuisines, id]
+    }
+    this.setState({ selectedCuisines })
   }
 
   render() {
-    const { citySuggestions, cuisineSuggestions, restaurantSuggestions } = this.state
+    const { citySuggestions, cuisineSuggestions, restaurantSuggestions, selectedCity, selectedCuisines } = this.state
     return (
       <>
         <header>
-          <Link to='/'>
-            <div className='logo'>Nomato</div>
-          </Link>
+          <Link to='/' className='logo'>Nomato</Link>
           <div className='search-bar'>
-            <SearchForm name='searchCities' onChange={this.onChange} onSubmit={this.submitCities} />
+            <SearchForm className='searchCities' name='searchCities' onChange={this.onChange} onSubmit={this.submitCities} />
             <SearchForm name='searchTerm' onChange={this.onChange} onSubmit={this.submitSearch} />
+
+            <div className='flex-wrapper city-list'>
+              {citySuggestions && citySuggestions.map(loc => (
+                <Item className={`item ${selectedCity === loc.id ? 'active' : ''}`} key={loc.id} {...loc} onClick={this.selectCity} />
+                ))
+              }
+            </div>
           </div>
         </header>
-
-        {citySuggestions &&
-          <div className='flex-wrapper'>
-            {citySuggestions.map(loc => (
-              <Item className='item' key={loc.id} { ...loc } onClick={this.selectCity} />
-            ))}
-          </div>
-        }
-
-        {cuisineSuggestions &&
-          <div className='flex-wrapper'>
-            {cuisineSuggestions.map(({ cuisine: { cuisine_id, cuisine_name } }) => (
-              <Item className='item' key={cuisine_id} id={cuisine_id} name={cuisine_name} onClick={this.selectCuisine} />
-            ))}
-          </div>
-        }
-
-        {restaurantSuggestions &&
-          <section>
-            <ul className='restaurant-wrapper'>
-              {restaurantSuggestions.map(({ restaurant }) => (
-                <RestaurantList key={restaurant.id} { ...restaurant }/>
+        <main>
+          {cuisineSuggestions &&
+            <div className='flex-wrapper'>
+              {cuisineSuggestions.map(({ cuisine: { cuisine_id, cuisine_name } }) => (
+                <Item className={`item ${selectedCuisines.includes(cuisine_id) ? 'active' : ''}`} key={cuisine_id} id={cuisine_id} name={cuisine_name} onClick={this.selectCuisine} />
               ))}
-            </ul>
-          </section>
-        }
+            </div>
+          }
+
+          {restaurantSuggestions &&
+            <section>
+              <ul className='restaurant-wrapper'>
+                {restaurantSuggestions.map(({ restaurant }) => (
+                  <RestaurantList key={restaurant.id} { ...restaurant }/>
+                ))}
+              </ul>
+            </section>
+          }
+        </main>
       </>
     )
   }
