@@ -207,16 +207,21 @@ main {
   }
 }
 
-img {
-  // width: 100vw;
-  // height: 30vh;
-  margin-bottom: 10px;
-}
 
 .restaurant-show {
   padding: 20px;
   margin: 0 auto;
   max-width: 1200px;
+
+  img {
+    max-width: 100%;
+    margin-bottom: 10px;
+  }
+
+  h4 {
+    font-size: 20px;
+    margin: 8px 0;
+  }
 }
 
 .panel-wrapper {
@@ -224,46 +229,51 @@ img {
   flex-wrap: wrap;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 5px;
-  padding: 8px;
+  padding: 8px 16px;
   margin-bottom: 10px;
   background-color: #FFF;
   width: 100%;
-}
 
-.restMainInfo {
-  flex-direction: column;
-
-  h1, h2, p, div:first-of-type {
-    margin-left: 10px;
+  h2 {
+    margin: 0;
+    margin-bottom: 0;
+    color: $zomato-red;
   }
 
-  div:first-of-type {
-    width: 65px;
-    height: 40px;
-    padding: 4px 8px;
-    border-radius: 5px;
-    font-weight: 700;
-    color: #FFF;
-    text-align: center;
-    padding-top: 6px;
-    padding-left: 2px;
-    font-size: 22px;
+  .rating {
+    position: absolute;
+    top: 8px;
+    right: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    > div {
+      display: flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-size: 20px;
+      color: #FFF;
+      font-weight: 700;
+    }
+    
+    p {
+      margin-top: 6px;
+      margin-bottom: 0;
+    }
 
     span {
       color: $zomato-lightGrey;
     }
   }
+}
 
-  h1 {
-    color: $zomato-black;
-    font-size: 33.6px;
-    margin-bottom: 0;
-  }
 
-  h2 {
-    font-size: 15px;
-    color: $zomato-lightGrey
-  }
+.restMainInfo {
+  width: 100%;
+  position: relative;
+  flex-direction: column;
 
   p {
     font-size: 12px;
@@ -277,24 +287,13 @@ img {
     list-style: none;
   }
 
-  div {
-    width: 30%;
-    margin-left: 10px;
+  > div:not(:first-of-type) {
+    max-width: 50%;
+    margin-right: 20px;
   }
 
-  h4 {
-    font-size: 22px;
-    margin-bottom: 5px;
-  }
-
-  h5 {
-    font-size: 18px;
-    color: rgb(61, 153, 61);
-    margin-top: 0;
-  }
-
-  span {
-    color: $zomato-red;
+  p {
+    font-size: 14px;
   }
 }
 
@@ -308,11 +307,18 @@ img {
   }
 }
 
-// .review-wrapper {
-//   width: 100%;
-// }
-
 .restReview {
+  position: relative;
+
+  .reviewer-detail {
+    display: flex;
+    width: 100%;
+
+    p {
+      margin-top: 30px;
+      margin-left: 10px;
+    }
+  }
 
   img {
     width: 100px;
@@ -320,4 +326,8 @@ img {
     margin: 10px;
     border-radius: 50px;
   }
+
+  h5 {
+    font-size: 18px;
+  }  
 }
