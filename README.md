@@ -34,7 +34,7 @@ The zomato api holds information on restaurants around the world along with any 
 ![](https://github.com/lloydnoone/ga-restaurants-react/blob/master/Screenshot%202019-10-14%20at%2021.38.44.png?raw=true)
 
 
-The search function work by diplaying city choices that were filtered from the API using the users location input. The user then select the specific city they want from the options that are rendered. They are then presented with a selection of cuisines that are available in that city. 
+The search function works by displaying city choices that were filtered from the API using the users location input. The user then select the specific city they want from the options that are rendered. They are then presented with a selection of cuisines that are available in that city. 
 
 At this point the user can search the whole city inlcuding all cuisines or choose one or as many of them as they like. if they press search now all restaurants including those cuisines will be displayed. The search input can be used for other search terms such as dishes or names of restaurants for example. They will be added to the query that filters the results.
 
