@@ -34,21 +34,11 @@ The zomato api holds information on restaurants around the world along with any 
 ![](https://github.com/lloydnoone/ga-restaurants-react/blob/master/Screenshot%202019-10-14%20at%2021.38.44.png?raw=true)
 
 
+The search function work by diplaying city choices that were filtered from the API using the users location input. The user then select the specific city they want from the options that are rendered. They are then presented with a selection of cuisines that are available in that city. 
 
-The ghosts have 3 modes of movement. 
+At this point the user can search the whole city inlcuding all cuisines or choose one or as many of them as they like. if they press search now all restaurants including those cuisines will be displayed. The search input can be used for other search terms such as dishes or names of restaurants for example. They will be added to the query that filters the results.
 
-* Chase
-  > In chase the ghosts target pacman by comapring their postion to pacmans position on the gameboard in a staight line. This means they sometimes go the wrong way and is an intentional part of the game mechanics.
-  
-* scatter
-  > In scatter, the ghosts will go to there respective corner and circle around until after a few seconds they put back in chase mode.
-  
-* frightened 
-  > firghtened mode is activated when pacman eats the larger energizer dots. In this mode the ghosts take random turns and      move more slowly. This gives pacman a chance to chase down the ghosts and eat them for extra points.
-  
-A timer changes the ghosts from chase to scatter. because of this the ghosts attack in waves. The time remaining in each mode is remembered during frightened mode so that they go back to there previous state and carry on where they left off.
 
-an example of the ghosts movement function-
 
 ```javascript
 submitCities(e) {
@@ -91,17 +81,37 @@ submitCities(e) {
   }
 ```
 
-Upon eating all the pips, the player wins and is moved on to the next level. The stage is the same but the ghosts will now be moving faster. the ghosts speed will increase everytime the stage is cleared. 
+The results appear below on the same page. Clicking on one of the result will take the user to a page that shows more detailed information on that particular restaurant. This page required reaching and mapping over many nested levels of data for things like reviews etc. I also filtered to remove reviews with no comments.
+
+```javascripts
+  <div>
+    <h4>Reviews</h4>
+    {user_reviews.filter(({ review }) => review.review_text.length).map(({ review }) => (
+      <div key={review.id} className='panel-wrapper restReview'>
+        <div className='reviewer-detail'>
+          <img src={review.user.profile_image} />
+          <h5>{review.user.name}</h5>
+          <p>{review.review_time_friendly}</p>
+        </div>
+        <div className='rating'>
+          <div style={{ backgroundColor: `#${review.rating_color}` }}>{review.rating}</div>
+        </div>
+        <p> {review.review_text} </p>
+      </div>
+    ))}
+  </div>
+```
+
+![](leveleditor.gif)
 
 ## Challenges and future improvements
 
-The main challenge of the project was to create a ghost AI that was similair to the original pacman. I recreated this in much the same way by giving the ghosts the ability to change targe tiles depending on which mode they are in. 
+The main challenge in this project was to get all the information we need by making correct API calls in an efficient way. 
 
-The part where i spent the most time and had the most difficulty was organizing the timers and intervals which control these states. They switch back and forth and are interupted by the frightened state and should resume where they left off. The functions handling this are complicated and need refactoring somehow.
+The part where i spent the most time and had the most difficulty was correctly mapping though nested objects and arrays in which, each level of nested data could also be an object or array.  
 
-The main future improvement for the project would be to expand on the level editor that i created for my own convenience. It would be a great idea to make this more user friendly and accesible to users. This would give a whole new feature where players could make there own stages for the game and save them.
+The main future improvement for the project would be moslty styling. the way the filtered result of city and cuisine is displayed to the user is not great. I would change this to a scrollable dropdown list and aim or something that more closely resembles the Zomato website. Some of the code should be refactored into seperate components.
 
-![](leveleditor.gif)
 
 ## Author 
 
