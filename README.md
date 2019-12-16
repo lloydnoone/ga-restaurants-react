@@ -104,13 +104,25 @@ The results appear below on the same page. Clicking on one of the result will ta
 
 ![](leveleditor.gif)
 
-## Challenges and future improvements
+## Wins and Blockers
 
 The main challenge in this project was to get all the information we need by making correct API calls in an efficient way. 
 
 The part where i spent the most time and had the most difficulty was correctly mapping though nested objects and arrays in which, each level of nested data could also be an object or array.  
 
+A big win for me on this project was getting experience pair coding with somebody else. It was a new experience for me. My fears were proved wrong and me and Chawit both agree that we worked very well together and we are both more than happy with the end result.
+
+## Future Features
+
 The main future improvement for the project would be moslty styling. the way the filtered result of city and cuisine is displayed to the user is not great. I would change this to a scrollable dropdown list and aim or something that more closely resembles the Zomato website. Some of the code should be refactored into seperate components.
+
+## Key Learnings
+
+With less than 48hrs time management was again, a big factor in this project. In order to make use of the time as effectively as we could, division of labour was important and things like coordinating our breaks helped. 
+
+We used a screen sharing plugin for vscode to imporve productivity but hand problems when both trying to contribute at the same time. It was buggy and we ended up with a lot of confusion when working with the same file and sometimes even when working in seperate files. 
+
+It was also my first experience working with public APIs. I realised the importance of choosing the correct API by looking at popularity, quality of documentation and whether it was suitable for our needs. I also gained experience in drilling down into multiple nested fields of objects and arrays in order to get what we need from the JSON.
 
 
 ## Author 
