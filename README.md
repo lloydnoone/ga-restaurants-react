@@ -21,7 +21,7 @@ It is a an attempt to receate the Zomato website using their own API. we did thi
 
 ## Deployment
 
-The website is deployed on GitHub pages and it can be found here- https://nomatosearch.herokuapp.com
+The website is deployed on Heroku and it can be found here- https://nomatosearch.herokuapp.com
 
 ## Getting Started
 
