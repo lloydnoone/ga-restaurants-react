@@ -4,7 +4,7 @@
 
 ![image](https://github.com/lloydnoone/ga-restaurants-react/blob/master/Screenshot%202019-10-14%20at%2021.27.41.png?raw=true)
 
-This was a project assigned to me by General Assembly during a software enginerring immersive course. The purpose of the project was to solidify the skills we learnt in the second module. This inluded learning react and interacting with public API's. We were to put them to use in a project of our choice. 
+This was a project assigned to me by General Assembly during a software engineering immersive course. The purpose of the project was to solidify the skills we learnt in the second module. This inluded learning react and interacting with public API's. We were to put them to use in a project of our choice. 
 
 After learning react for a week and covering the use of API's in the same amount of time we were given a day and a half to complete this project. I worked on this pair programming with another student on the course.
 
